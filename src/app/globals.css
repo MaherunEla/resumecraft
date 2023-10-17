@@ -2,26 +2,38 @@
 @tailwind components;
 @tailwind utilities;
 
-:root {
-  --foreground-rgb: 0, 0, 0;
-  --background-start-rgb: 214, 219, 220;
-  --background-end-rgb: 255, 255, 255;
-}
-
-@media (prefers-color-scheme: dark) {
-  :root {
-    --foreground-rgb: 255, 255, 255;
-    --background-start-rgb: 0, 0, 0;
-    --background-end-rgb: 0, 0, 0;
+@layer base {
+  .input {
+    @apply px-4 py-2 border border-[#D7DFE9] rounded-[4px] outline-none;
   }
-}
+  svg {
+    max-width: 100%;
+    vertical-align: middle;
+  }
+  .svg-pi {
+    width: 100px;
+    height: 100px;
+    transform: rotate(-90deg);
+  }
+  .svg-pi-track {
+    stroke: #ddd;
+  }
+  /* 1 */
+  /* .svg-pi-indicator {
+    stroke: #3b83f6;
+    stroke-dashoffset: 219.8px;
+    stroke-dasharray: 251.2px;
+  } */
+  /* 2 */
+  .svg-pi-indicator {
+    stroke: #3b83f6;
+    /* stroke-dashoffset: 188.4px; */
+    stroke-dasharray: 251.2px;
+  }
 
-body {
-  color: rgb(var(--foreground-rgb));
-  background: linear-gradient(
-      to bottom,
-      transparent,
-      rgb(var(--background-end-rgb))
-    )
-    rgb(var(--background-start-rgb));
+  .svg-pi-track,
+  .svg-pi-indicator {
+    fill: transparent;
+    stroke-width: 8px;
+  }
 }

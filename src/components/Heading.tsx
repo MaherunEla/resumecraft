@@ -18,7 +18,7 @@ const Heading = ({ title, subtitle, stroffset, text }: Props) => {
         </p>
       </div>
       <div className="flex flex-col ">
-        <svg className="svg-pi">
+        <svg className="svg-pi ">
           <circle className="svg-pi-track" cx={50} cy={50} r={40} />
 
           <circle

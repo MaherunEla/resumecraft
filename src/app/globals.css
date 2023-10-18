@@ -34,6 +34,27 @@
   .svg-pi-track,
   .svg-pi-indicator {
     fill: transparent;
-    stroke-width: 8px;
+    stroke-width: 10px;
+  }
+  .form {
+    @apply w-[404px] h-[295px] p-[10px] border border-[#D7DFE9] rounded-[4px] flex flex-col items-center justify-center cursor-pointer;
+  }
+  .progrss {
+    @apply w-[404px] h-[100px] p-3 border border-[#D7DFE9] rounded-[4px] flex flex-col gap-[12px];
+  }
+  .progressfile {
+    @apply flex gap-3;
+  }
+  .progress-bar {
+    @apply w-[333px] h-[5px] bg-[#D7DFE9] flex-shrink-0 border border-[#D7DFE9] rounded-[5px];
+  }
+  .progrsspercentage {
+    @apply w-[162.549px] h-[5px] rounded-[5px] border border-[#455468] bg-[#455468];
+  }
+  .propercent {
+    @apply text-[12px] font-medium  leading-[20px];
+  }
+  .progrssarea {
+    @apply flex h-[20px] items-center  gap-3;
   }
 }

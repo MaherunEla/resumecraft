@@ -15,30 +15,32 @@ export default function RootLayout({
 }: {
   children: React.ReactNode;
 }) {
-  const createFormSchema = z.object({
-    name: z.string(),
-    title: z.string(),
-    image: z.string(),
-    phnNumber: z.string(),
-    email: z.string(),
-    website: z.string(),
-    address: z.string(),
-    socialsite: z
-      .array(
-        z.object({
-          value: z.string(),
-          url: z.string(),
-        })
-      )
-      .optional(),
-  });
+  // const createFormSchema = z.object({
+  //   name: z.string(),
+  //   title: z.string(),
+  //   image: z.string(),
+  //   phnNumber: z.string(),
+  //   email: z.string(),
+  //   website: z.string(),
+  //   address: z.string(),
+  //   socialsite: z
+  //     .array(
+  //       z.object({
+  //         value: z.string(),
+  //         url: z.string(),
+  //       })
+  //     )
+  //     .optional(),
+  // });
 
-  type FormValues = z.infer<typeof createFormSchema>;
+  // type FormValues = z.infer<typeof createFormSchema>;
 
-  const methods = useForm<FormValues>({
-    resolver: zodResolver(createFormSchema),
-    mode: "onChange",
-  });
+  // const methods = useForm<FormValues>({
+  //   resolver: zodResolver(createFormSchema),
+  //   mode: "onChange",
+  // });
+  const methods = useForm();
+
   console.log(methods);
   return (
     <html lang="en">

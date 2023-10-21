@@ -1,33 +1,64 @@
 "use client";
 import Heading from "@/components/Heading";
 import Image from "next/image";
-import React from "react";
+import React, { useEffect, useState } from "react";
 import { useFormContext } from "react-hook-form";
+import axios from "axios";
+import Progress from "../project/components/Progress";
+import NextButton from "@/components/Button/NextButton";
+import Link from "next/link";
 
 const ProfilePage = () => {
   const { register } = useFormContext();
-  const form = document.querySelector(".form");
-  const fileInput: any = form?.querySelector(".file-input");
-  const progrss = document.querySelector(".progrss");
-  form?.addEventListener("click", () => {
-    fileInput?.click();
-  });
-  // fileInput.onchange = ({ target }: any) => {
-  //   let file = target.files[0];
-  //   if (file) {
-  //     let fileName = file.name;
-  //     console.log(fileName);
-  //   }
-  // };
+  const [File, setFile] = useState({});
 
-  fileInput?.addEventListener("change", (event: any) => {
-    const target = event.target;
-    let file = target.files[0];
-    if (file) {
-      let fileName = file.name;
-      console.log(fileName);
+  type url = {
+    success: number;
+    url: string | null;
+  };
+  const uploadImages = async (file: File): Promise<url> => {
+    try {
+      const options = {
+        onUploadProgress: (progressEvent: any) => {
+          const { loaded, total } = progressEvent;
+          let percent = Math.floor((loaded * 100) / total);
+          console.log(`${loaded}kb of ${total}kb | ${percent}%`);
+          console.log(file.name);
+          setFile({
+            FileName: file.name,
+            total,
+            percent,
+          });
+          //let progressHTML =
+
+          //htmlprogress.innerHTML = Progress({ file, total, percent });
+          // <Progress file={file} total={total} percent={percent} />;
+        },
+      };
+
+      let formData = new FormData();
+      formData.append("file", file);
+      formData.append("upload_preset", "my-uploads");
+
+      const res = await axios.post(
+        "https://api.cloudinary.com/v1_1/djfwg1dfa/image/upload",
+        formData,
+        options
+      );
+      console.log({ res });
+
+      return {
+        success: 1,
+        url: res.data.secure_url,
+      };
+    } catch (error) {
+      console.error({ error });
+      return {
+        success: 1,
+        url: null,
+      };
     }
-  });
+  };
 
   return (
     <div className="py-[129px] flex flex-col gap-[96px] items-center justify-center">
@@ -63,12 +94,16 @@ const ProfilePage = () => {
             className="input w-full"
             {...register("facebook")}
           /> */}
-          <div className="form">
+          <div className="form relative">
             <input
               type="file"
-              className="file-input"
-              hidden
+              className="file-input opacity-0 w-full h-full absolute "
               {...register("image")}
+              onChange={async (e: any) => {
+                const file = e.target.files[0];
+                const res = await uploadImages(file);
+                console.log(res);
+              }}
             />
             <div className="w-[100px] h-[103px] relative">
               <Image src="/Group 58.svg" fill alt="image" />
@@ -80,33 +115,18 @@ const ProfilePage = () => {
               or <span className="underline  text-[#3C83F6]">Upload File</span>
             </h6>
           </div>
+
           <p className="text-[12px] font-normal text-[#8897AE]">
             Upload .jpg or .png file with 16:9 ratio
           </p>
           <div className="progrss">
-            <div className="progressfile">
-              <div className="p-[10] w-[44px] h-[44px] bg-white flex items-center justify-center">
-                <div className=" w-[24px] h-[24px] relative">
-                  <Image src="/File.svg" fill alt="image" />
-                </div>
-              </div>
-              <div className="flex items-start w-full justify-between">
-                <div>
-                  <p className="text-[#2D3643] text-base font-medium leading-[24px]">
-                    Image Name.jpg
-                  </p>
-                  <p className="text-[12px] font-normal text-[#8897AE]">
-                    3.54 MB
-                  </p>
-                </div>
-                <Image src="/Remove.svg" width={20} height={20} alt="image" />
-              </div>
-            </div>
-            <div className="progrssarea">
-              <div className="progress-bar">
-                <div className="progrsspercentage"></div>
-              </div>
-              <p className="propercent">50%</p>
+            <Progress file={File} />
+          </div>
+          <div className="w-1/2 flex items-end justify-end pt-[80px]">
+            <div className="w-fit px-7 py-[10px] bg-[#3B83F6] rounded-[4px] ">
+              <Link href="/contact" className="text-white font-medium text-sm">
+                Next
+              </Link>
             </div>
           </div>
         </div>

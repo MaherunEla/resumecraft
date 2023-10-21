@@ -1,5 +1,6 @@
 "use client";
 import Heading from "@/components/Heading";
+import Link from "next/link";
 import React from "react";
 import { useFormContext } from "react-hook-form";
 const ContactPage = () => {
@@ -48,6 +49,21 @@ const ContactPage = () => {
               Address
             </label>
             <input type="text" className="input" {...register("address")} />
+          </div>
+        </div>
+        <div className="w-1/2 flex items-center justify-between pt-[80px]">
+          <div className="w-fit px-7 py-[10px] border border-[#3B83F6]  bg-white  rounded-[4px] ">
+            <Link
+              href="/Profile"
+              className=" text-[#3B83F6] font-medium text-sm"
+            >
+              Back
+            </Link>
+          </div>
+          <div className="w-fit px-7 py-[10px] bg-[#3B83F6] rounded-[4px] ">
+            <Link href="/socialsite" className="text-white font-medium text-sm">
+              Next
+            </Link>
           </div>
         </div>
       </div>

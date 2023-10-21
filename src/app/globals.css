@@ -57,4 +57,19 @@
   .progrssarea {
     @apply flex h-[20px] items-center  gap-3;
   }
+  .imagearea {
+    @apply p-[10] w-[44px] h-[44px] bg-white flex items-center justify-center;
+  }
+  .image {
+    @apply w-[24px] h-[24px] relative;
+  }
+  .filenamearea {
+    @apply flex items-start w-full justify-between;
+  }
+  .filename {
+    @apply text-[#2D3643] text-base font-medium leading-[24px];
+  }
+  .total {
+    @apply text-[12px] font-normal text-[#8897AE];
+  }
 }

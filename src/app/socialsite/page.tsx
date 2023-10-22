@@ -1,33 +1,32 @@
 "use client";
 import Heading from "@/components/Heading";
+import Link from "next/link";
 import React, { useState } from "react";
 import { useFormContext, useFieldArray } from "react-hook-form";
+import { BsPlus } from "react-icons/bs";
 
 const SocialSite = () => {
-  const { control, register, formState, setValue } = useFormContext();
+  const { control, register, formState, setValue, watch, getValues } =
+    useFormContext();
   const { fields, append, prepend, remove, swap, move, insert } = useFieldArray(
     {
       name: "socialsite",
       control,
     }
   );
-  console.log(fields);
-  const geturl = (url: any) => {
-    console.log(url);
-    const domain = new URL(url).hostname;
-    console.log(domain);
-  };
+  if (fields.length === 0) {
+    append({
+      value: "Site Name",
+      url: "",
+    });
+  }
+  console.log(fields, getValues());
+  const socialsites = watch(["socialsite"]);
+  console.log(socialsites);
 
   const [site, setSite] = useState<string>("");
   console.log(site);
 
-  const socialsiteoption = [
-    "Instagram",
-    "Pinterest",
-    "Twiter",
-    "Linkedin",
-    "Dribbble",
-  ];
   // const {fields,append} = useFieldArray({
   //   control,
   //   name:""
@@ -49,21 +48,22 @@ const SocialSite = () => {
       <div className="flex flex-col gap-12 w-[836px]">
         <div className="flex flex-col gap-5">
           {fields.map((item: any, index) => {
-            console.log({ item });
             // console.log(new URL(item.url));
+            // const v = watch([""]);
+            // console.log(v);
+            const valuename = watch(`socialsite.${index}.value`);
+            console.log({ item });
 
-            const platformName = new URL(
-              item.url ? item.url : "http://PlatformName.com"
-            ).hostname.split(".")[1];
             return (
               <div className="flex  gap-7" key={index}>
                 <div className="flex flex-col gap-2 w-[477px]">
-                  <input hidden {...register(`socialsite.${index}.value`)} />
+                  {/* <input {...register(`socialsite.${index}.value`)} /> */}
                   <label
                     className="text-base capitalize font-medium text-[#2D3643]"
                     key={index}
+                    {...register(`socialsite.${index}.value`)}
                   >
-                    {platformName}
+                    {valuename ? valuename : "Platform Name"}
                   </label>
                   <input
                     type="text"
@@ -71,6 +71,10 @@ const SocialSite = () => {
                     {...register(`socialsite.${index}.url`)}
                     onChange={async (e) => {
                       setValue(`socialsite.${index}.url`, e.target.value);
+                      const platformName = new URL(
+                        e.target.value
+                      ).hostname.split(".")[1];
+                      setValue(`socialsite.${index}.value`, platformName);
                     }}
                   />
                 </div>
@@ -86,35 +90,33 @@ const SocialSite = () => {
         </div>
 
         <div className="flex flex-col">
-          <label className="text-base font-medium text-[#2D3643] pb-2">
-            Select platform
-          </label>
-          <div className="flex">
-            <select
-              className="w-[477px] border border-[#D7DFE9] rounded-[4px] py-4 px-4"
-              id="socialsite"
-              onChange={(e) => {
-                setSite(e.target.value);
-              }}
+          <div
+            className="w-fit py-[10px] px-4 flex items-center  gap-[6px] cursor-pointer"
+            onClick={() =>
+              append({
+                value: "",
+                url: "",
+              })
+            }
+          >
+            <BsPlus />
+            <p className="text-sm font-medium">Add New Language</p>
+          </div>
+        </div>
+
+        <div className="w-1/2 flex items-center justify-between pt-[80px]">
+          <div className="w-fit px-7 py-[10px] border border-[#3B83F6]  bg-white  rounded-[4px] ">
+            <Link
+              href="/contact"
+              className=" text-[#3B83F6] font-medium text-sm"
             >
-              {socialsiteoption.map((item, index) => (
-                <option value={item} key={index}>
-                  {item}
-                </option>
-              ))}
-            </select>
-            <button
-              type="button"
-              className="text-sm font-medium px-4 text-center text-[#455468]"
-              onClick={() =>
-                append({
-                  value: "",
-                  url: "",
-                })
-              }
-            >
-              Add New
-            </button>
+              Back
+            </Link>
+          </div>
+          <div className="w-fit px-7 py-[10px] bg-[#3B83F6] rounded-[4px] ">
+            <Link href="/languagef" className="text-white font-medium text-sm">
+              Next
+            </Link>
           </div>
         </div>
       </div>

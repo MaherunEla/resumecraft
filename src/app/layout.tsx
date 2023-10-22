@@ -31,10 +31,32 @@ export default function RootLayout({
         })
       )
       .optional(),
-    language: z.array(
+    language: z
+      .array(
+        z.object({
+          languagename: z.string(),
+          level: z.string(),
+        })
+      )
+      .optional(),
+    experience: z.array(
       z.object({
-        languagename: z.string(),
-        level: z.string(),
+        company: z.string(),
+        logo: z.string(),
+        location: z.string(),
+        position: z.string(),
+        startmonth: z.string(),
+        startyear: z.string(),
+        endmonth: z.string(),
+        endyear: z.string(),
+        details: z.string(),
+      })
+    ),
+    project: z.array(
+      z.object({
+        projecttitle: z.string(),
+        projectlink: z.string().url({ message: "Invalid URL" }),
+        description: z.string(),
       })
     ),
   });

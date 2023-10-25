@@ -48,6 +48,15 @@ const Skills = () => {
     });
   }
   console.log(watch());
+  const getdata = async () => {
+    const data = await fetch("api/form", {
+      method: "GET",
+      cache: "no-store",
+    });
+    const res = data.json();
+    console.log({ res });
+  };
+
   return (
     <div className=" py-[129px] flex flex-col gap-[96px] items-center justify-center">
       <Heading title="Skills" subtitle="" stroffset={0} text="8/8" />
@@ -140,6 +149,15 @@ const Skills = () => {
           <div className="w-fit px-7 py-[10px] bg-[#3B83F6] rounded-[4px] ">
             <button type="submit" className="text-white font-medium text-sm">
               Submit
+            </button>
+          </div>
+          <div className="w-fit px-7 py-[10px] bg-[#3B83F6] rounded-[4px] ">
+            <button
+              type="button"
+              onClick={getdata}
+              className="text-white font-medium text-sm"
+            >
+              Get data
             </button>
           </div>
         </div>

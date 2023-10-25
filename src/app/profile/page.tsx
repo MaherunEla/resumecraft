@@ -9,13 +9,15 @@ import NextButton from "@/components/Button/NextButton";
 import Link from "next/link";
 
 const ProfilePage = () => {
-  const { register } = useFormContext();
+  const { register, watch, setValue } = useFormContext();
   const [File, setFile] = useState({});
 
   type url = {
     success: number;
     url: string | null;
   };
+
+  console.log(watch());
   const uploadImages = async (file: File): Promise<url> => {
     try {
       const options = {
@@ -103,6 +105,7 @@ const ProfilePage = () => {
                 const file = e.target.files[0];
                 const res = await uploadImages(file);
                 console.log(res);
+                setValue("image", res.url);
               }}
             />
             <div className="w-[100px] h-[103px] relative">
@@ -128,6 +131,11 @@ const ProfilePage = () => {
                 Next
               </Link>
             </div>
+          </div>
+          <div className="w-fit px-7 py-[10px] bg-[#3B83F6] rounded-[4px] ">
+            <button type="submit" className="text-white font-medium text-sm">
+              Submit
+            </button>
           </div>
         </div>
       </div>

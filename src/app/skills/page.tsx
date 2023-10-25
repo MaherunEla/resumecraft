@@ -1,11 +1,41 @@
 "use client";
 import Heading from "@/components/Heading";
 import Link from "next/link";
-import React from "react";
+import React, { useState } from "react";
 import { BsPlus } from "react-icons/bs";
 import { useFieldArray, useFormContext } from "react-hook-form";
+import CreatableSelect from "react-select/creatable";
+
+interface Option {
+  readonly label: string;
+  readonly value: string;
+}
+
+const createOption = (label: string) => ({
+  label,
+  value: label.toLowerCase().replace(/\W/g, ""),
+});
+
+const defaultOptions = [
+  createOption("Designe"),
+  createOption("Development"),
+  createOption("Three"),
+];
 
 const Skills = () => {
+  const [isLoading, setIsLoading] = useState(false);
+  const [options, setOptions] = useState(defaultOptions);
+  const [value, setValuee] = useState<Option | null>();
+
+  const handleCreate = (inputValue: string) => {
+    setIsLoading(true);
+    setTimeout(() => {
+      const newOption = createOption(inputValue);
+      setIsLoading(false);
+      setOptions((prev) => [...prev, newOption]);
+      setValuee(newOption);
+    }, 1000);
+  };
   const { control, watch, register, setValue, getValues } = useFormContext();
   const { fields, append } = useFieldArray({
     name: "skills",
@@ -13,7 +43,7 @@ const Skills = () => {
   });
   if (fields.length === 0) {
     append({
-      skillsetname: "",
+      skillsetname: [""],
       skill: [""],
     });
   }
@@ -29,7 +59,21 @@ const Skills = () => {
               <label className="text-base font-medium text-[#2D3643] pb-2">
                 Skills Set Name
               </label>
-              <select
+
+              <CreatableSelect
+                {...register(`skills.${index}.skillsetname`)}
+                isClearable
+                isDisabled={isLoading}
+                isLoading={isLoading}
+                onChange={(newValue) => {
+                  setValuee(newValue);
+                  setValue(`skills.${index}.skillsetname`, newValue);
+                }}
+                onCreateOption={handleCreate}
+                options={options}
+                value={value}
+              />
+              {/* <select
                 className="w-full h-[36px] border border-[#D7DFE9] rounded-[4px] py-[8px] px-4"
                 {...register(`skills.${index}.skillsetname`)}
                 onChange={(e) => {
@@ -39,20 +83,36 @@ const Skills = () => {
                 <option value="Designe">Designe</option>
 
                 <option value="Development">Development</option>
-              </select>
+              </select> */}
             </div>
             <div className="flex flex-col w-full">
               <label className="text-base font-medium text-[#2D3643] pb-2">
                 Skills
               </label>
-              <input
+
+              <CreatableSelect
+                {...register(`skills.${index}.skill`)}
+                isMulti
+                isClearable
+                isDisabled={isLoading}
+                isLoading={isLoading}
+                onChange={(newValue) => {
+                  setValuee(newValue);
+                  setValue(`skills.${index}.skill`, newValue);
+                }}
+                onCreateOption={handleCreate}
+                options={options}
+                value={value}
+              />
+
+              {/* <input
                 type="text"
                 className="input w-full h-[36px]"
                 {...register(`skills.${index}.skill`)}
                 onChange={async (e) => {
                   setValue(`skills.${index}.skill`, e.target.value);
                 }}
-              />
+              /> */}
             </div>
           </div>
         ))}
@@ -60,7 +120,7 @@ const Skills = () => {
           className="w-fit py-[10px] px-4 flex items-center  gap-[6px] cursor-pointer"
           onClick={() =>
             append({
-              skillsetname: "",
+              skillsetname: [""],
               skill: [""],
             })
           }
@@ -78,9 +138,9 @@ const Skills = () => {
             </Link>
           </div>
           <div className="w-fit px-7 py-[10px] bg-[#3B83F6] rounded-[4px] ">
-            <Link href="/skills" className="text-white font-medium text-sm">
-              Next
-            </Link>
+            <button type="submit" className="text-white font-medium text-sm">
+              Submit
+            </button>
           </div>
         </div>
       </div>

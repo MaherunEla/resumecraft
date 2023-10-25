@@ -23,22 +23,20 @@ export default function RootLayout({
     email: z.string().email({ message: "Invalid email address" }),
     website: z.string().url({ message: "Invalid Website Link" }),
     address: z.string(),
-    socialsite: z
-      .array(
-        z.object({
-          value: z.string(),
-          url: z.string().url({ message: "Invalid url" }),
-        })
-      )
-      .optional(),
-    language: z
-      .array(
-        z.object({
-          languagename: z.string(),
-          level: z.string(),
-        })
-      )
-      .optional(),
+    socialsite: z.array(
+      z.object({
+        value: z.string(),
+        url: z.string().url({ message: "Invalid url" }),
+      })
+    ),
+
+    language: z.array(
+      z.object({
+        languagename: z.string(),
+        level: z.string(),
+      })
+    ),
+
     experience: z.array(
       z.object({
         company: z.string(),
@@ -59,6 +57,19 @@ export default function RootLayout({
         description: z.string(),
       })
     ),
+    education: z.array(
+      z.object({
+        websitelink: z.string(),
+        year: z.string(),
+        title: z.string(),
+      })
+    ),
+    skills: z.array(
+      z.object({
+        skillsetname: z.string().array(),
+        skill: z.string().array(),
+      })
+    ),
   });
 
   type FormValues = z.infer<typeof createFormSchema>;
@@ -69,13 +80,19 @@ export default function RootLayout({
   });
 
   console.log(methods);
+  const onSubmit = (data: FormValues) => console.log({ data });
+  // const onSubmit = async (data: FormValues) => {
+  //   console.log({ data });
+  //   const res = await fetch("api/form", {
+  //     method: "POST",
+  //     body: JSON.stringify(data),
+  //   });
+  // };
   return (
     <html lang="en">
       <body className={inter.className}>
         <FormProvider {...methods}>
-          <form onSubmit={methods.handleSubmit((data) => console.log(data))}>
-            {children}
-          </form>
+          <form onSubmit={methods.handleSubmit(onSubmit)}>{children}</form>
         </FormProvider>
       </body>
     </html>

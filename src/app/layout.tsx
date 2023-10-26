@@ -3,6 +3,7 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import "./globals.css";
 import type { Metadata } from "next";
 import { Inter } from "next/font/google";
+import { QueryClientProvider, QueryClient } from "@tanstack/react-query";
 import { useForm, FormProvider, UseFormProps } from "react-hook-form";
 import { z } from "zod";
 const inter = Inter({
@@ -107,9 +108,11 @@ export default function RootLayout({
   return (
     <html lang="en">
       <body className={inter.className}>
-        <FormProvider {...methods}>
-          <form onSubmit={methods.handleSubmit(onSubmit)}>{children}</form>
-        </FormProvider>
+        <QueryClientProvider client={new QueryClient()}>
+          <FormProvider {...methods}>
+            <form onSubmit={methods.handleSubmit(onSubmit)}>{children}</form>
+          </FormProvider>
+        </QueryClientProvider>
       </body>
     </html>
   );

@@ -1,8 +1,9 @@
 "use client";
 import Heading from "@/components/Heading";
+import axios from "axios";
 import Link from "next/link";
 import React from "react";
-import { useFieldArray, useFormContext } from "react-hook-form";
+import { Controller, useFieldArray, useFormContext } from "react-hook-form";
 import { BsPlus } from "react-icons/bs";
 const ExperiencePage = () => {
   const { control, watch, register, setValue, getValues } = useFormContext();
@@ -10,6 +11,7 @@ const ExperiencePage = () => {
     name: "experience",
     control,
   });
+  console.log(watch());
   if (fields.length === 0) {
     append({
       company: "",
@@ -24,6 +26,35 @@ const ExperiencePage = () => {
     });
   }
   console.log(watch());
+  type url = {
+    success: number;
+    url: string | null;
+  };
+  const uploadImages = async (file: File): Promise<url> => {
+    try {
+      let formData = new FormData();
+      formData.append("file", file);
+      formData.append("upload_preset", "my-uploads");
+
+      const res = await axios.post(
+        "https://api.cloudinary.com/v1_1/djfwg1dfa/image/upload",
+        formData
+      );
+      console.log({ res });
+
+      return {
+        success: 1,
+        url: res.data.secure_url,
+      };
+    } catch (error) {
+      console.error({ error });
+      return {
+        success: 1,
+        url: null,
+      };
+    }
+  };
+
   return (
     <div className=" py-[129px] flex flex-col gap-[96px] items-center justify-center">
       <Heading
@@ -52,7 +83,25 @@ const ExperiencePage = () => {
               <label className="text-base font-medium text-[#2D3643] pb-2">
                 Company/ Organization Logo
               </label>
-              <input
+              <Controller
+                name={`experience.${index}.logo`}
+                control={control}
+                render={({ field }) => (
+                  <input
+                    type="file"
+                    accept="image/*"
+                    className="input w-full h-[36px]"
+                    onChange={async (e: any) => {
+                      const file = e.target.files[0];
+                      const res = await uploadImages(file);
+                      console.log(res);
+                      setValue(`experience.${index}.logo`, res.url);
+                      field.onChange(res.url);
+                    }}
+                  />
+                )}
+              />
+              {/* <input
                 type="file"
                 className="input w-full h-[36px]"
                 {...register(`experience.${index}.logo`)}
@@ -62,7 +111,7 @@ const ExperiencePage = () => {
                   console.log(file);
                   setValue(`experience.${index}.logo`, file);
                 }}
-              />
+              /> */}
             </div>
             <div className="flex flex-col">
               <label className="text-base font-medium text-[#2D3643] pb-2">

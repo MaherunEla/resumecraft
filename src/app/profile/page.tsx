@@ -2,14 +2,14 @@
 import Heading from "@/components/Heading";
 import Image from "next/image";
 import React, { useEffect, useState } from "react";
-import { useFormContext } from "react-hook-form";
+import { Controller, useFormContext } from "react-hook-form";
 import axios from "axios";
 import Progress from "../project/components/Progress";
 import NextButton from "@/components/Button/NextButton";
 import Link from "next/link";
 
 const ProfilePage = () => {
-  const { register, watch, setValue } = useFormContext();
+  const { register, watch, setValue, control } = useFormContext();
   const [File, setFile] = useState({});
 
   type url = {
@@ -97,7 +97,25 @@ const ProfilePage = () => {
             {...register("facebook")}
           /> */}
           <div className="form relative">
-            <input
+            <Controller
+              name="image"
+              control={control}
+              render={({ field }) => (
+                <input
+                  type="file"
+                  accept="image/*"
+                  className="file-input opacity-0 w-full h-full absolute "
+                  onChange={async (e: any) => {
+                    const file = e.target.files[0];
+                    const res = await uploadImages(file);
+                    console.log(res);
+                    setValue("image", res.url);
+                    field.onChange(res.url);
+                  }}
+                />
+              )}
+            />
+            {/* <input
               type="file"
               className="file-input opacity-0 w-full h-full absolute "
               {...register("image")}
@@ -107,7 +125,7 @@ const ProfilePage = () => {
                 console.log(res);
                 setValue("image", res.url);
               }}
-            />
+            /> */}
             <div className="w-[100px] h-[103px] relative">
               <Image src="/Group 58.svg" fill alt="image" />
             </div>

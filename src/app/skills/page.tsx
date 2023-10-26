@@ -5,7 +5,12 @@ import React, { useState } from "react";
 import { BsPlus } from "react-icons/bs";
 import { useFieldArray, useFormContext } from "react-hook-form";
 import CreatableSelect from "react-select/creatable";
+import { useQuery } from "@tanstack/react-query";
+import axios from "axios";
 
+const fetchskill = () => {
+  return axios.get("/api/skillname");
+};
 interface Option {
   readonly label: string;
   readonly value: string;
@@ -23,6 +28,11 @@ const defaultOptions = [
 ];
 
 const Skills = () => {
+  const { data, refetch } = useQuery({
+    queryKey: ["skills"],
+    queryFn: fetchskill,
+  });
+  console.log(data?.data);
   const [isLoading, setIsLoading] = useState(false);
   const [options, setOptions] = useState(defaultOptions);
   const [value, setValuee] = useState<Option | null>();

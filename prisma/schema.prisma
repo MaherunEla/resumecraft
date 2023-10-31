@@ -28,3 +28,23 @@ model FormValues {
   education  Json?
   skills     Json?
 }
+
+// model Socialsite {
+//   id Int @id @default(autoincrement())
+
+// }
+
+// model Language {
+// }
+
+// model Experience {
+// }
+
+// model Project {
+// }
+
+// model Education {
+// }
+
+// model Skills {
+// }

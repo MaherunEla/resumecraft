@@ -1,7 +1,7 @@
 "use client";
 import Heading from "@/components/Heading";
 import Link from "next/link";
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { BsPlus } from "react-icons/bs";
 import { useFieldArray, useFormContext } from "react-hook-form";
 import CreatableSelect from "react-select/creatable";
@@ -21,31 +21,37 @@ const createOption = (label: string) => ({
   value: label.toLowerCase().replace(/\W/g, ""),
 });
 
-const defaultOptions = [
-  createOption("Designe"),
-  createOption("Development"),
-  createOption("Three"),
-];
-
 const Skills = () => {
   const { data, refetch } = useQuery({
     queryKey: ["skills"],
     queryFn: fetchskill,
   });
   console.log(data?.data);
+
+  const defaultOptions = [
+    createOption("Designe"),
+    createOption("Development"),
+    createOption("Three"),
+  ];
+  const defaultOptionsskill: readonly Option[] = [
+    { value: "ocean", label: "Ocean" },
+    { value: "blue", label: "Blue" },
+    { value: "purple", label: "Purple" },
+    { value: "red", label: "Red" },
+    { value: "orange", label: "Orange" },
+    { value: "yellow", label: "Yellow" },
+    { value: "green", label: "Green" },
+  ];
+
+  // const defaultOptions = data?.data.map((item: any) => ({
+  //   value: item.value,
+  //   label: item.label,
+  // }));
+
   const [isLoading, setIsLoading] = useState(false);
   const [options, setOptions] = useState(defaultOptions);
-  const [value, setValuee] = useState<Option | null>();
+  const [optionsskill, setOptionsskill] = useState(defaultOptionsskill);
 
-  const handleCreate = (inputValue: string) => {
-    setIsLoading(true);
-    setTimeout(() => {
-      const newOption = createOption(inputValue);
-      setIsLoading(false);
-      setOptions((prev) => [...prev, newOption]);
-      setValuee(newOption);
-    }, 1000);
-  };
   const { control, watch, register, setValue, getValues } = useFormContext();
   const { fields, append } = useFieldArray({
     name: "skills",
@@ -53,7 +59,7 @@ const Skills = () => {
   });
   if (fields.length === 0) {
     append({
-      skillsetname: [""],
+      skillsetname: "",
       skill: [""],
     });
   }
@@ -64,7 +70,7 @@ const Skills = () => {
       cache: "no-store",
     });
     const res = data.json();
-    console.log({ res });
+    console.log(res);
   };
 
   return (
@@ -85,12 +91,13 @@ const Skills = () => {
                 isDisabled={isLoading}
                 isLoading={isLoading}
                 onChange={(newValue) => {
-                  setValuee(newValue);
-                  setValue(`skills.${index}.skillsetname`, newValue);
+                  console.log(newValue?.label);
+                  if (newValue) {
+                    setValue(`skills.${index}.skillsetname`, newValue?.label);
+                    refetch();
+                  }
                 }}
-                onCreateOption={handleCreate}
                 options={options}
-                value={value}
               />
               {/* <select
                 className="w-full h-[36px] border border-[#D7DFE9] rounded-[4px] py-[8px] px-4"
@@ -116,12 +123,15 @@ const Skills = () => {
                 isDisabled={isLoading}
                 isLoading={isLoading}
                 onChange={(newValue) => {
-                  setValuee(newValue);
-                  setValue(`skills.${index}.skill`, newValue);
+                  console.log(newValue[0].label);
+                  if (newValue) {
+                    const skillselected = newValue.map((item) => item.label);
+                    setValue(`skills.${index}.skill`, skillselected);
+                  } else {
+                    setValue(`skills.${index}.skill`, []);
+                  }
                 }}
-                onCreateOption={handleCreate}
-                options={options}
-                value={value}
+                options={optionsskill}
               />
 
               {/* <input
@@ -139,7 +149,7 @@ const Skills = () => {
           className="w-fit py-[10px] px-4 flex items-center  gap-[6px] cursor-pointer"
           onClick={() =>
             append({
-              skillsetname: [""],
+              skillsetname: "",
               skill: [""],
             })
           }

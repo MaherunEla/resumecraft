@@ -5,53 +5,90 @@ import React, { useEffect, useState } from "react";
 import { BsPlus } from "react-icons/bs";
 import { useFieldArray, useFormContext } from "react-hook-form";
 import CreatableSelect from "react-select/creatable";
-import { useQuery } from "@tanstack/react-query";
+import { QueryClient, useQuery } from "@tanstack/react-query";
 import axios from "axios";
+import { Changa } from "next/font/google";
 
-const fetchskill = () => {
-  return axios.get("/api/skillname");
+const fetchskillname = () => {
+  return axios.get("/api/skillsetname");
 };
 interface Option {
   readonly label: string;
-  readonly value: string;
+  readonly id: string;
 }
 
-const createOption = (label: string) => ({
-  label,
-  value: label.toLowerCase().replace(/\W/g, ""),
-});
-
 const Skills = () => {
+  const [defaultskilllist, setDefaultskilllist] = useState<Option[]>();
+  const [idforskill, setIdforskill] = useState<Number>();
   const { data, refetch } = useQuery({
-    queryKey: ["skills"],
-    queryFn: fetchskill,
+    queryKey: ["skillsetname"],
+    queryFn: fetchskillname,
   });
-  console.log(data?.data);
+  console.log(data?.data.skillsetname);
 
-  const defaultOptions = [
-    createOption("Designe"),
-    createOption("Development"),
-    createOption("Three"),
-  ];
-  const defaultOptionsskill: readonly Option[] = [
-    { value: "ocean", label: "Ocean" },
-    { value: "blue", label: "Blue" },
-    { value: "purple", label: "Purple" },
-    { value: "red", label: "Red" },
-    { value: "orange", label: "Orange" },
-    { value: "yellow", label: "Yellow" },
-    { value: "green", label: "Green" },
-  ];
+  // const defaultOptions = [
+  //   createOption("Designe"),
+  //   createOption("Development"),
+  //   createOption("Three"),
+  // ];
 
-  // const defaultOptions = data?.data.map((item: any) => ({
-  //   value: item.value,
-  //   label: item.label,
-  // }));
+  const defaultOptions = data?.data.skillsetname.map((item: any) => ({
+    id: item.id,
+    label: item.name,
+  }));
+  console.log({ defaultOptions });
 
-  const [isLoading, setIsLoading] = useState(false);
-  const [options, setOptions] = useState(defaultOptions);
-  const [optionsskill, setOptionsskill] = useState(defaultOptionsskill);
+  const handleskill = async (newValue: any) => {
+    console.log(typeof newValue);
 
+    axios
+      .post("http://localhost:3000/api/skillsetname", { name: newValue })
+      .then((res) => {
+        console.log({ res });
+
+        // QueryClient.invalidateQueries({queryKey:["skillsetname"]})
+      });
+  };
+  const handleskilllist = async (newValue: any) => {
+    console.log(newValue);
+    axios.post(`http://localhost:3000/api/skill/${id}`, { name: newValue });
+  };
+  const filterskill = (id: any) => {
+    const skill = axios.get(`http://localhost:3000/api/skill/${id}`);
+
+    return skill;
+    // defaultskillvalue = res?skill.map((item: any) => ({
+    //   id: item.id,
+    //   label: item.name,
+    // }));
+  };
+
+  const addnewskill = (id: any) => {
+    return axios.put(`http://localhost:3000/api/skill/${id}`);
+  };
+
+  const defaultOptionskill = (data: any) => {
+    console.log(data.data.skill);
+    return data.data.skill.map((item: any) => ({
+      id: item.id,
+      label: item.name,
+    }));
+    // defaultskillvalue = data.data.skill.map((item: any) => ({
+    //   id: item.id,
+    //   label: item.name,
+    // }));
+    // return defaultskillvalue;
+  };
+
+  // const defaultOptionsskill: readonly Option[] = [
+  //   { value: "ocean", label: "Ocean" },
+  //   { value: "blue", label: "Blue" },
+  //   { value: "purple", label: "Purple" },
+  //   { value: "red", label: "Red" },
+  //   { value: "orange", label: "Orange" },
+  //   { value: "yellow", label: "Yellow" },
+  //   { value: "green", label: "Green" },
+  // ];
   const { control, watch, register, setValue, getValues } = useFormContext();
   const { fields, append } = useFieldArray({
     name: "skills",
@@ -72,7 +109,7 @@ const Skills = () => {
     const res = data.json();
     console.log(res);
   };
-
+  console.log({ idforskill });
   return (
     <div className=" py-[129px] flex flex-col gap-[96px] items-center justify-center">
       <Heading title="Skills" subtitle="" stroffset={0} text="8/8" />
@@ -88,16 +125,23 @@ const Skills = () => {
               <CreatableSelect
                 {...register(`skills.${index}.skillsetname`)}
                 isClearable
-                isDisabled={isLoading}
-                isLoading={isLoading}
-                onChange={(newValue) => {
-                  console.log(newValue?.label);
+                onChange={async (newValue) => {
+                  console.log(newValue?.id);
                   if (newValue) {
                     setValue(`skills.${index}.skillsetname`, newValue?.label);
+                    const data = await filterskill(newValue?.id);
+                    console.log(typeof newValue?.id);
+                    setIdforskill(newValue?.id);
+
+                    console.log({ data });
+                    const defaultskillvalue = await defaultOptionskill(data);
+                    setDefaultskilllist(defaultskillvalue);
+                    console.log({ defaultskillvalue });
                     refetch();
                   }
                 }}
-                options={options}
+                onCreateOption={handleskill}
+                options={defaultOptions}
               />
               {/* <select
                 className="w-full h-[36px] border border-[#D7DFE9] rounded-[4px] py-[8px] px-4"
@@ -120,18 +164,20 @@ const Skills = () => {
                 {...register(`skills.${index}.skill`)}
                 isMulti
                 isClearable
-                isDisabled={isLoading}
-                isLoading={isLoading}
-                onChange={(newValue) => {
-                  console.log(newValue[0].label);
+                onChange={async (newValue) => {
+                  console.log({ newValue });
                   if (newValue) {
                     const skillselected = newValue.map((item) => item.label);
+                    console.log({ skillselected });
+                    const data = await addnewskill(idforskill, skillselected);
+
                     setValue(`skills.${index}.skill`, skillselected);
                   } else {
                     setValue(`skills.${index}.skill`, []);
                   }
                 }}
-                options={optionsskill}
+                options={defaultskilllist}
+                onCreateOption={handleskilllist}
               />
 
               {/* <input

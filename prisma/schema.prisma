@@ -48,3 +48,16 @@ model FormValues {
 
 // model Skills {
 // }
+
+model Skillsetname {
+  id    Int     @id @default(autoincrement())
+  name  String
+  skill Skill[]
+}
+
+model Skill {
+  id             Int          @id @default(autoincrement())
+  name           String
+  skillname      Skillsetname @relation(fields: [SkillSetNameId], references: [id])
+  SkillSetNameId Int
+}

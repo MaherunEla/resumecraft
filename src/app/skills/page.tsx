@@ -5,12 +5,15 @@ import React, { useEffect, useState } from "react";
 import { BsPlus } from "react-icons/bs";
 import { useFieldArray, useFormContext } from "react-hook-form";
 import CreatableSelect from "react-select/creatable";
-import { QueryClient, useQuery } from "@tanstack/react-query";
+import { QueryClient, useMutation, useQuery } from "@tanstack/react-query";
 import axios from "axios";
 import { Changa } from "next/font/google";
 
 const fetchskillname = () => {
   return axios.get("/api/skillsetname");
+};
+const fetchAllSkill = () => {
+  return axios.get("/api/skill");
 };
 interface Option {
   readonly label: string;
@@ -24,6 +27,11 @@ const Skills = () => {
     queryKey: ["skillsetname"],
     queryFn: fetchskillname,
   });
+  const { data: skills, refetch: skillRefetch } = useQuery({
+    queryKey: ["Allskills"],
+    queryFn: fetchAllSkill,
+  });
+  console.log(skills?.data.Allskill);
   console.log(data?.data.skillsetname);
 
   // const defaultOptions = [
@@ -32,11 +40,11 @@ const Skills = () => {
   //   createOption("Three"),
   // ];
 
-  const defaultOptions = data?.data.skillsetname.map((item: any) => ({
+  const skillsetnames = data?.data.skillsetname.map((item: any) => ({
     id: item.id,
     label: item.name,
   }));
-  console.log({ defaultOptions });
+  console.log({ defaultOptions: skillsetnames });
 
   const handleskill = async (newValue: any) => {
     console.log(typeof newValue);
@@ -45,17 +53,31 @@ const Skills = () => {
       .post("http://localhost:3000/api/skillsetname", { name: newValue })
       .then((res) => {
         console.log({ res });
-
-        // QueryClient.invalidateQueries({queryKey:["skillsetname"]})
       });
   };
+
   const handleskilllist = async (newValue: any) => {
     console.log(newValue);
-    axios.post(`http://localhost:3000/api/skill/${id}`, { name: newValue });
+    axios.post(`http://localhost:3000/api/skill/${idforskill}`, {
+      name: newValue,
+    });
   };
-  const filterskill = (id: any) => {
-    const skill = axios.get(`http://localhost:3000/api/skill/${id}`);
 
+  const { mutate } = useMutation({
+    mutationFn: handleskilllist,
+  });
+
+  const createskill = (newValue: any) => {
+    mutate(newValue);
+  };
+
+  const filterskill = (id: any) => {
+    // const skill = axios.get(`http://localhost:3000/api/skill/${id}`);
+    // return skill;
+    const skill = skills?.data.Allskill.filter(
+      (e: any) => e.SkillSetNameId === id
+    );
+    console.log({ skill });
     return skill;
     // defaultskillvalue = res?skill.map((item: any) => ({
     //   id: item.id,
@@ -63,13 +85,13 @@ const Skills = () => {
     // }));
   };
 
-  const addnewskill = (id: any) => {
-    return axios.put(`http://localhost:3000/api/skill/${id}`);
+  const addnewskill = (id: any, data: any) => {
+    return axios.put(`http://localhost:3000/api/skill/${id}`, data);
   };
 
   const defaultOptionskill = (data: any) => {
-    console.log(data.data.skill);
-    return data.data.skill.map((item: any) => ({
+    console.log(data);
+    return data.map((item: any) => ({
       id: item.id,
       label: item.name,
     }));
@@ -101,6 +123,9 @@ const Skills = () => {
     });
   }
   console.log(watch());
+  const formValues = watch();
+  console.log({ formValues });
+
   const getdata = async () => {
     const data = await fetch("api/form", {
       method: "GET",
@@ -126,22 +151,11 @@ const Skills = () => {
                 {...register(`skills.${index}.skillsetname`)}
                 isClearable
                 onChange={async (newValue) => {
-                  console.log(newValue?.id);
-                  if (newValue) {
-                    setValue(`skills.${index}.skillsetname`, newValue?.label);
-                    const data = await filterskill(newValue?.id);
-                    console.log(typeof newValue?.id);
-                    setIdforskill(newValue?.id);
-
-                    console.log({ data });
-                    const defaultskillvalue = await defaultOptionskill(data);
-                    setDefaultskilllist(defaultskillvalue);
-                    console.log({ defaultskillvalue });
-                    refetch();
-                  }
+                  setValue(`skills.${index}.skillsetname`, newValue?.label);
+                  setIdforskill(newValue?.id);
                 }}
                 onCreateOption={handleskill}
-                options={defaultOptions}
+                options={skillsetnames}
               />
               {/* <select
                 className="w-full h-[36px] border border-[#D7DFE9] rounded-[4px] py-[8px] px-4"
@@ -169,15 +183,22 @@ const Skills = () => {
                   if (newValue) {
                     const skillselected = newValue.map((item) => item.label);
                     console.log({ skillselected });
-                    const data = await addnewskill(idforskill, skillselected);
 
                     setValue(`skills.${index}.skill`, skillselected);
                   } else {
                     setValue(`skills.${index}.skill`, []);
                   }
                 }}
-                options={defaultskilllist}
-                onCreateOption={handleskilllist}
+                options={skills?.data.Allskill?.filter(
+                  (e: any) => e.SkillSetNameId == idforskill || !idforskill
+                ).map((e: any) => {
+                  return {
+                    label: e.name,
+                    value: e.name,
+                  };
+                })}
+                //onCreateOption={handleskilllist}
+                onCreateOption={createskill}
               />
 
               {/* <input

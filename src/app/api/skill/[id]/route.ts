@@ -32,3 +32,21 @@ export const POST = async (req: NextRequest, { params }: any) => {
     );
   }
 };
+
+export const PUT = async (req: NextRequest, { params }: any) => {
+  console.log({ params });
+  const id = +params?.id;
+  console.log({ id });
+  const data = await req.json();
+  console.log();
+  try {
+    const skill = await prisma.skill.updateMany({
+      data: { ...data, SkillSetNameId: id },
+    });
+    return new NextResponse(JSON.stringify({ skill, status: 200 }));
+  } catch (err) {
+    return new NextResponse(
+      JSON.stringify({ message: "Something went wrong", status: 500 })
+    );
+  }
+};

@@ -29,25 +29,85 @@ model FormValues {
   skills     Json?
 }
 
-// model Socialsite {
-//   id Int @id @default(autoincrement())
+model Profile {
+  id         Int          @id @default(autoincrement())
+  name       String?
+  title      String?
+  image      String?
+  contact    Contact?
+  socialsite Socialsite[]
+  language   Language[]
+  experience Experience[]
+  project    Project[]
+  education  Education[]
+  skills     Skills[]
+}
 
-// }
+model Contact {
+  id        Int     @id @default(autoincrement())
+  phnNumber String?
+  email     String?
+  website   String?
+  address   String?
+  profile   Profile @relation(fields: [profileId], references: [id])
+  profileId Int     @unique
+}
 
-// model Language {
-// }
+model Socialsite {
+  id        Int     @id @default(autoincrement())
+  url       String
+  profile   Profile @relation(fields: [profileId], references: [id])
+  profileId Int     @unique
+}
 
-// model Experience {
-// }
+model Language {
+  id           Int     @id @default(autoincrement())
+  languageName String
+  level        String
+  profile      Profile @relation(fields: [profileId], references: [id])
+  profileId    Int     @unique
+}
 
-// model Project {
-// }
+model Experience {
+  id          Int     @id @default(autoincrement())
+  company     String
+  companyLogo String
+  location    String
+  position    String
+  startMonth  String
+  startYear   String
+  endMonth    String
+  endYear     String
+  details     String
+  profile     Profile @relation(fields: [profileId], references: [id])
+  profileId   Int     @unique
+}
 
-// model Education {
-// }
+model Project {
+  id           Int     @id @default(autoincrement())
+  projectTitle String
+  projectLink  String
+  description  String
+  profile      Profile @relation(fields: [profileId], references: [id])
+  profileId    Int     @unique
+}
 
-// model Skills {
-// }
+model Education {
+  id            Int     @id @default(autoincrement())
+  websiteLink   String
+  educationYear String
+  Title         String
+  profile       Profile @relation(fields: [profileId], references: [id])
+  profileId     Int     @unique
+}
+
+model Skills {
+  id            Int     @id @default(autoincrement())
+  skillsSetName String
+  Skills        String
+  profile       Profile @relation(fields: [profileId], references: [id])
+  profileId     Int     @unique
+}
 
 model Skillsetname {
   id    Int     @id @default(autoincrement())

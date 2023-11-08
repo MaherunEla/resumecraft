@@ -17,7 +17,8 @@ const ProfilePage = () => {
     url: string | null;
   };
 
-  console.log(watch());
+  const formValues = watch();
+  console.log({ formValues });
   const uploadImages = async (file: File): Promise<url> => {
     try {
       const options = {

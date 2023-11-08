@@ -19,10 +19,15 @@ interface Option {
   readonly label: string;
   readonly id: string;
 }
-
+interface Profile {
+  name: string;
+  title: string;
+  image: string;
+}
 const Skills = () => {
   const [defaultskilllist, setDefaultskilllist] = useState<Option[]>();
   const [idforskill, setIdforskill] = useState<Number>();
+  const [profiledata, setProfiledata] = useState<Profile[]>();
   const { data, refetch } = useQuery({
     queryKey: ["skillsetname"],
     queryFn: fetchskillname,
@@ -68,6 +73,7 @@ const Skills = () => {
   });
 
   const createskill = (newValue: any) => {
+    console.log(newValue);
     mutate(newValue);
   };
 
@@ -125,6 +131,8 @@ const Skills = () => {
   console.log(watch());
   const formValues = watch();
   console.log({ formValues });
+
+  //setProfiledata([formValues.name, formValues.title, formValues.image]);
 
   const getdata = async () => {
     const data = await fetch("api/form", {

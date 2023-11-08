@@ -3,7 +3,11 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import "./globals.css";
 import type { Metadata } from "next";
 import { Inter } from "next/font/google";
-import { QueryClientProvider, QueryClient } from "@tanstack/react-query";
+import {
+  QueryClientProvider,
+  QueryClient,
+  useMutation,
+} from "@tanstack/react-query";
 import { useForm, FormProvider, UseFormProps } from "react-hook-form";
 import { z } from "zod";
 const inter = Inter({
@@ -97,18 +101,74 @@ export default function RootLayout({
   };
   console.log(methods);
   // const onSubmit = (data: any) => console.log({ data });
+  const query = new QueryClient();
   const onSubmit = async (data: FormValues) => {
     console.log({ data });
+
+    const profileres = await fetch("api/profile", {
+      method: "POST",
+      body: JSON.stringify({
+        name: data.name,
+        title: data.title,
+        image: data.image,
+      }),
+    });
+
+    const profiledata = await profileres.json();
+    console.log(profiledata.profile.id);
+
+    const contact = await fetch(`api/contact/${profiledata.profile.id}`, {
+      method: "POST",
+      body: JSON.stringify({
+        phnNumber: data.phnNumber,
+        email: data.email,
+        website: data.website,
+        address: data.address,
+      }),
+    });
+
+    console.log({ contact });
+    console.log(data.socialsite);
+
+    const socialsite = await fetch(`api/socialsite/${profiledata.profile.id}`, {
+      method: "POST",
+      body: JSON.stringify(data.socialsite),
+    });
+    const socialsitedata = socialsite.json();
+    console.log({ socialsitedata });
+
+    const language = await fetch(`api/language/${profiledata.profile.id}`, {
+      method: "POST",
+      body: JSON.stringify(data.language),
+    });
+    const languagedata = language.json();
+    console.log({ languagedata });
+
     const res = await fetch("api/form", {
       method: "POST",
       body: JSON.stringify(data),
     });
   };
 
+  // query.setMutationDefaults(['onSubmit'],{
+  //   mutationFn:onSubmit,
+
+  // })
+  // const mutation = useMutation ({mutationKey : ['onSubmit']})
+  // mutation.mutate(data)
+  // const { mutate } = useMutation({
+  //   mutationFn: onSubmit,
+
+  // });
+
+  // const onSubmitForm = (newValue: any) => {
+  //   mutate(newValue);
+  // };
+
   return (
     <html lang="en">
       <body className={inter.className}>
-        <QueryClientProvider client={new QueryClient()}>
+        <QueryClientProvider client={query}>
           <FormProvider {...methods}>
             <form onSubmit={methods.handleSubmit(onSubmit)}>{children}</form>
           </FormProvider>

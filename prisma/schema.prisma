@@ -57,7 +57,7 @@ model Socialsite {
   id        Int     @id @default(autoincrement())
   url       String
   profile   Profile @relation(fields: [profileId], references: [id])
-  profileId Int     @unique
+  profileId Int
 }
 
 model Language {
@@ -65,7 +65,7 @@ model Language {
   languageName String
   level        String
   profile      Profile @relation(fields: [profileId], references: [id])
-  profileId    Int     @unique
+  profileId    Int
 }
 
 model Experience {
@@ -80,7 +80,7 @@ model Experience {
   endYear     String
   details     String
   profile     Profile @relation(fields: [profileId], references: [id])
-  profileId   Int     @unique
+  profileId   Int
 }
 
 model Project {
@@ -89,7 +89,7 @@ model Project {
   projectLink  String
   description  String
   profile      Profile @relation(fields: [profileId], references: [id])
-  profileId    Int     @unique
+  profileId    Int
 }
 
 model Education {
@@ -98,15 +98,15 @@ model Education {
   educationYear String
   Title         String
   profile       Profile @relation(fields: [profileId], references: [id])
-  profileId     Int     @unique
+  profileId     Int
 }
 
 model Skills {
-  id            Int     @id @default(autoincrement())
+  id            Int      @id @default(autoincrement())
   skillsSetName String
-  Skills        String
-  profile       Profile @relation(fields: [profileId], references: [id])
-  profileId     Int     @unique
+  Skills        String[]
+  profile       Profile  @relation(fields: [profileId], references: [id])
+  profileId     Int
 }
 
 model Skillsetname {

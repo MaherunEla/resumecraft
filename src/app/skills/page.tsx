@@ -246,7 +246,7 @@ const Skills = () => {
               Submit
             </button>
           </div>
-          {/* <div className="w-fit px-7 py-[10px] bg-[#3B83F6] rounded-[4px] ">
+          <div className="w-fit px-7 py-[10px] bg-[#3B83F6] rounded-[4px] ">
             <button
               type="button"
               onClick={getdata}
@@ -254,7 +254,7 @@ const Skills = () => {
             >
               Get data
             </button>
-          </div> */}
+          </div>
         </div>
       </div>
     </div>

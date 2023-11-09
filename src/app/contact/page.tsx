@@ -4,7 +4,10 @@ import Link from "next/link";
 import React from "react";
 import { useFormContext } from "react-hook-form";
 const ContactPage = () => {
-  const { register } = useFormContext();
+  const {
+    register,
+    formState: { errors },
+  } = useFormContext();
   return (
     <div className=" py-[129px] flex flex-col gap-[96px] items-center justify-center">
       <Heading
@@ -24,6 +27,9 @@ const ContactPage = () => {
               className="input w-full"
               {...register("phnNumber")}
             />
+            {errors.phnNumber && (
+              <p className="error">{errors.phnNumber.message as string}</p>
+            )}
           </div>
           <div className="flex flex-col gap-2 w-full">
             <label className="text-base font-medium text-[#2D3643]">
@@ -34,6 +40,9 @@ const ContactPage = () => {
               className="input w-full"
               {...register("email")}
             />
+            {errors.email && (
+              <p className="error">{errors.email.message as string}</p>
+            )}
           </div>
         </div>
 
@@ -43,12 +52,18 @@ const ContactPage = () => {
               Website
             </label>
             <input type="text" className="input" {...register("website")} />
+            {errors.website && (
+              <p className="error">{errors.website.message as string}</p>
+            )}
           </div>
           <div className="flex flex-col gap-2 w-full">
             <label className="text-base font-medium text-[#2D3643]">
               Address
             </label>
             <input type="text" className="input" {...register("address")} />
+            {errors.address && (
+              <p className="error">{errors.address.message as string}</p>
+            )}
           </div>
         </div>
         <div className="w-1/2 flex items-center justify-between pt-[80px]">

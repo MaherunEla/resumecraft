@@ -20,85 +20,112 @@ export default function RootLayout({
 }: {
   children: React.ReactNode;
 }) {
-  // const createFormSchema = z.object({
-  //   name: z.string(),
-  //   title: z.string(),
-  //   image: z.string(),
-  //   phnNumber: z.string(),
-  //   email: z.string().email({ message: "Invalid email address" }),
-  //   website: z.string().url({ message: "Invalid Website Link" }),
-  //   address: z.string(),
-  //   socialsite: z.array(
-  //     z.object({
-  //       value: z.string(),
-  //       url: z.string().url({ message: "Invalid url" }),
-  //     })
-  //   ),
+  const createFormSchema = z.object({
+    name: z.string().min(1, "Name is required"),
+    title: z.string().min(1, "Title is required"),
+    image: z.string().min(1, "Image is Required"),
+    phnNumber: z
+      .string()
+      .min(1, "Phone Number is Required")
+      .length(11, "Must Contain 11 Digit"),
+    email: z
+      .string()
+      .min(1, "Email is Required")
+      .email({ message: "Invalid email address" }),
+    website: z
+      .string()
+      .min(1, "Website Link is Required")
+      .url({ message: "Invalid Website Link" }),
+    address: z.string().min(1, "Address is Required "),
+    socialsite: z.array(
+      z
+        .object({
+          value: z.string(),
+          url: z
+            .string()
+            .min(1, "Site Url Required")
+            .url({ message: "Invalid url" }),
+        })
+        .optional()
+    ),
 
-  //   language: z.array(
-  //     z.object({
-  //       languagename: z.string(),
-  //       level: z.string(),
-  //     })
-  //   ),
+    language: z.array(
+      z
+        .object({
+          languagename: z.string().min(1, "Language Name is Required"),
+          level: z.string(),
+        })
+        .optional()
+    ),
 
-  //   experience: z.array(
-  //     z.object({
-  //       company: z.string(),
-  //       logo: z.string(),
-  //       location: z.string(),
-  //       position: z.string(),
-  //       startmonth: z.string(),
-  //       startyear: z.string(),
-  //       endmonth: z.string(),
-  //       endyear: z.string(),
-  //       details: z.string(),
-  //     })
-  //   ),
-  //   project: z.array(
-  //     z.object({
-  //       projecttitle: z.string(),
-  //       projectlink: z.string().url({ message: "Invalid URL" }),
-  //       description: z.string(),
-  //     })
-  //   ),
-  //   education: z.array(
-  //     z.object({
-  //       websitelink: z.string(),
-  //       year: z.string(),
-  //       title: z.string(),
-  //     })
-  //   ),
-  //   skills: z.array(
-  //     z.object({
-  //       skillsetname: z.string().array(),
-  //       skill: z.string().array(),
-  //     })
-  //   ),
-  // });
+    experience: z.array(
+      z
+        .object({
+          company: z.string().min(1, "Company Name is Requird"),
+          logo: z.string().optional(),
+          location: z.string().min(1, "location is Required"),
+          position: z.string().min(1, "Position is Required"),
+          startmonth: z.string().min(1, "Start Month  is Required"),
+          startyear: z.string().min(1, "Start Year is Required"),
+          endmonth: z.string().min(1, "End Month is Required"),
+          endyear: z.string().min(1, "End Year  is Required"),
+          details: z.string().min(1, "Details is Required"),
+        })
+        .optional()
+    ),
+    project: z.array(
+      z
+        .object({
+          projecttitle: z.string().min(1, "Project Title is Required"),
+          projectlink: z
+            .string()
+            .min(1, "Project link is Required")
+            .url({ message: "Invalid URL" }),
+          description: z.string().optional(),
+        })
+        .optional()
+    ),
+    education: z.array(
+      z
+        .object({
+          websitelink: z.string().min(1, "Website Link is Required"),
+          year: z.string().min(1, "Year is Required"),
+          title: z.string().min(1, "Title is Required"),
+        })
+        .optional()
+    ),
+    skills: z.array(
+      z
+        .object({
+          skillsetname: z.string().min(1, "Skill Set Name  is Required"),
+          skill: z.string().array().min(1, "Skill is Required"),
+        })
+        .optional()
+    ),
+  });
 
-  // type FormValues = z.infer<typeof createFormSchema>;
-  const methods = useForm<FormValues>();
+  type FormValues = z.infer<typeof createFormSchema>;
+  // const methods = useForm<FormValues>();
 
-  // const methods = useForm<FormValues>({
-  //   resolver: zodResolver(createFormSchema),
-  //   mode: "onChange",
-  // });
-  type FormValues = {
-    name: string;
-    title: string;
-    image: string;
-    phnNumber: string;
-    email: string;
-    website: string;
-    address: string;
-    socialsite: any;
-    language: any;
-    experience: any;
-    project: any;
-    education: any;
-    skills: any;
-  };
+  const methods = useForm<FormValues>({
+    resolver: zodResolver(createFormSchema),
+    // mode: "onChange",
+  });
+  // type FormValues = {
+  //   name: string;
+  //   title: string;
+  //   image: string;
+  //   phnNumber: string;
+  //   email: string;
+  //   website: string;
+  //   address: string;
+  //   socialsite: any;
+  //   language: any;
+  //   experience: any;
+  //   project: any;
+  //   education: any;
+  //   skills: any;
+  // };
   console.log(methods);
   // const onSubmit = (data: any) => console.log({ data });
   const query = new QueryClient();
@@ -197,7 +224,9 @@ export default function RootLayout({
       <body className={inter.className}>
         <QueryClientProvider client={query}>
           <FormProvider {...methods}>
-            <form onSubmit={methods.handleSubmit(onSubmit)}>{children}</form>
+            <form onSubmit={methods.handleSubmit(onSubmit)} noValidate>
+              {children}
+            </form>
           </FormProvider>
         </QueryClientProvider>
       </body>

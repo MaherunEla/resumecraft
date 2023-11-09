@@ -5,7 +5,7 @@ import React from "react";
 import { useFieldArray, useFormContext } from "react-hook-form";
 import { BsPlus } from "react-icons/bs";
 const EducationPage = () => {
-  const { control, watch, register, setValue, getValues } = useFormContext();
+  const { control, watch, register, setValue, getValues,formState:{errors} } = useFormContext();
   const { fields, append } = useFieldArray({
     name: "education",
     control,
@@ -42,6 +42,9 @@ const EducationPage = () => {
                   setValue(`education.${index}.websitelink`, e.target.value);
                 }}
               />
+             {errors.education && errors.education.[index] && errors.education.[index].websitelink && (
+    <p className="error">{errors.education.[index].websitelink.message as string}</p>
+  )}
             </div>
             <div className="flex flex-col w-full">
               <label className="text-base font-medium text-[#2D3643] pb-2">

@@ -9,7 +9,13 @@ import NextButton from "@/components/Button/NextButton";
 import Link from "next/link";
 
 const ProfilePage = () => {
-  const { register, watch, setValue, control } = useFormContext();
+  const {
+    register,
+    watch,
+    setValue,
+    control,
+    formState: { errors },
+  } = useFormContext();
   const [File, setFile] = useState({});
 
   type url = {
@@ -74,8 +80,28 @@ const ProfilePage = () => {
       <div className="w-[836px]">
         <div className="flex gap-7">
           <div className="flex flex-col gap-2 w-full">
-            <label className="text-base font-medium text-[#2D3643]">Name</label>
+            <label
+              htmlFor="name"
+              className="text-base font-medium text-[#2D3643]"
+            >
+              Name
+            </label>
+            {/* <Controller
+              name="name"
+              control={control}
+              render={({ field }) => (
+                <input
+                  type="text"
+                  className="input w-full"
+                  {...register("name")}
+                />
+              )}
+            /> */}
             <input type="text" className="input w-full" {...register("name")} />
+
+            {errors["name"] && (
+              <p className="error">{errors["name"]?.message as string}</p>
+            )}
           </div>
           <div className="flex flex-col gap-2 w-full">
             <label className="text-base font-medium text-[#2D3643] ">
@@ -86,6 +112,9 @@ const ProfilePage = () => {
               className="input w-full"
               {...register("title")}
             />
+            {errors.title && (
+              <p className="error">{errors.title.message as string}</p>
+            )}
           </div>
         </div>
         <div className="pt-12 flex flex-col gap-2 w-full">
@@ -116,6 +145,9 @@ const ProfilePage = () => {
                 />
               )}
             />
+            {errors.image && (
+              <p className="error">{errors.image.message as string}</p>
+            )}
             {/* <input
               type="file"
               className="file-input opacity-0 w-full h-full absolute "
@@ -151,11 +183,11 @@ const ProfilePage = () => {
               </Link>
             </div>
           </div>
-          {/* <div className="w-fit px-7 py-[10px] bg-[#3B83F6] rounded-[4px] ">
+          <div className="w-fit px-7 py-[10px] bg-[#3B83F6] rounded-[4px] ">
             <button type="submit" className="text-white font-medium text-sm">
               Submit
             </button>
-          </div> */}
+          </div>
         </div>
       </div>
     </div>

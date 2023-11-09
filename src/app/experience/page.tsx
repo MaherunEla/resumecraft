@@ -84,28 +84,39 @@ const ExperiencePage = () => {
               <label className="text-base font-medium text-[#2D3643] pb-2">
                 Company/ Organization Logo
               </label>
-              <div className="mb-5 ">
+              {/* <div className="mb-5 ">
                 {preview && (
                   <Image src={preview} width={250} height={250} alt="logo" />
                 )}
-              </div>
+              </div> */}
               <Controller
                 name={`experience.${index}.logo`}
                 control={control}
                 render={({ field }) => (
-                  <input
-                    type="file"
-                    accept="image/*"
-                    className=""
-                    onChange={async (e: any) => {
-                      const file = e.target.files[0];
-                      const res = await uploadImages(file);
-                      console.log(res);
-                      setValue(`experience.${index}.logo`, res.url);
-                      setPreview(res.url);
-                      field.onChange(res.url);
-                    }}
-                  />
+                  <div>
+                    <input
+                      type="file"
+                      accept="image/*"
+                      className=""
+                      onChange={async (e: any) => {
+                        const file = e.target.files[0];
+                        const res = await uploadImages(file);
+                        console.log(res);
+                        setValue(`experience.${index}.logo`, res.url);
+                        setPreview(res.url);
+                        field.onChange(res.url);
+                      }}
+                    />
+                    {field.value && (
+                      <Image
+                        src={field.value}
+                        className="mt-5"
+                        width={250}
+                        height={250}
+                        alt="logo"
+                      />
+                    )}
+                  </div>
                 )}
               />
               {/* <input

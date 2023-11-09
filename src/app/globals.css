@@ -72,4 +72,7 @@
   .total {
     @apply text-[12px] font-normal text-[#8897AE];
   }
+  .error {
+    @apply text-red-500 font-semibold;
+  }
 }

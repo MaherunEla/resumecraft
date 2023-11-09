@@ -96,7 +96,7 @@ const EducationPage = () => {
           }
         >
           <BsPlus />
-          <p className="text-sm font-medium">Add New Language</p>
+          <p className="text-sm font-medium">Add New Education</p>
         </div>
         <div className="w-1/2 flex items-center justify-between pt-[80px]">
           <div className="w-fit px-7 py-[10px] border border-[#3B83F6]  bg-white  rounded-[4px] ">
@@ -107,6 +107,11 @@ const EducationPage = () => {
               Back
             </Link>
           </div>
+          {/* <div className="w-fit px-7 py-[10px] bg-[#3B83F6] rounded-[4px] ">
+            <button type="submit" className="text-white font-medium text-sm">
+              Submit
+            </button>
+          </div> */}
           <div className="w-fit px-7 py-[10px] bg-[#3B83F6] rounded-[4px] ">
             <Link href="/skills" className="text-white font-medium text-sm">
               Next

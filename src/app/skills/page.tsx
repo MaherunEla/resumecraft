@@ -17,7 +17,7 @@ const fetchAllSkill = () => {
 };
 interface Option {
   readonly label: string;
-  readonly id: string;
+  readonly value: string;
 }
 interface Profile {
   name: string;
@@ -46,7 +46,7 @@ const Skills = () => {
   // ];
 
   const skillsetnames = data?.data.skillsetname.map((item: any) => ({
-    id: item.id,
+    value: item.id,
     label: item.name,
   }));
   console.log({ defaultOptions: skillsetnames });
@@ -98,7 +98,7 @@ const Skills = () => {
   const defaultOptionskill = (data: any) => {
     console.log(data);
     return data.map((item: any) => ({
-      id: item.id,
+      value: item.id,
       label: item.name,
     }));
     // defaultskillvalue = data.data.skill.map((item: any) => ({
@@ -159,8 +159,8 @@ const Skills = () => {
                 {...register(`skills.${index}.skillsetname`)}
                 isClearable
                 onChange={async (newValue) => {
-                  setValue(`skills.${index}.skillsetname`, newValue?.label);
-                  setIdforskill(newValue?.id);
+                  setValue(`skills.${index}.skillsetname`, newValue.label);
+                  setIdforskill(newValue?.value);
                 }}
                 onCreateOption={handleskill}
                 options={skillsetnames}
@@ -246,7 +246,7 @@ const Skills = () => {
               Submit
             </button>
           </div>
-          <div className="w-fit px-7 py-[10px] bg-[#3B83F6] rounded-[4px] ">
+          {/* <div className="w-fit px-7 py-[10px] bg-[#3B83F6] rounded-[4px] ">
             <button
               type="button"
               onClick={getdata}
@@ -254,7 +254,7 @@ const Skills = () => {
             >
               Get data
             </button>
-          </div>
+          </div> */}
         </div>
       </div>
     </div>

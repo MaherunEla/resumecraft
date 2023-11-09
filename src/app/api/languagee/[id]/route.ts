@@ -26,15 +26,15 @@ export const POST = async (req: NextRequest, { params }: any) => {
 
   try {
     const languagedata = data.map((item: any) => ({
-      languagename: item.languagename,
+      languageName: item.languagename,
       level: item.level,
       profileId: id,
     }));
 
-    const socialsite = await prisma.socialsite.createMany({
-      data: socialsitedata,
+    const language = await prisma.language.createMany({
+      data: languagedata,
     });
-    return new NextResponse(JSON.stringify({ socialsite, status: 200 }));
+    return new NextResponse(JSON.stringify({ language, status: 200 }));
   } catch (err) {
     return new NextResponse(
       JSON.stringify({ message: "Something went wront", status: 500 })

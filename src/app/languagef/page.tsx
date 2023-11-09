@@ -17,6 +17,7 @@ const LanguagePage = () => {
     });
   }
   console.log(fields, getValues());
+  console.log(watch());
   const languages = watch(["language"]);
   const languageLavel = ["Native", "Professional working", "Elementary"];
   return (
@@ -40,7 +41,7 @@ const LanguagePage = () => {
               <input
                 type="text"
                 className="input w-full h-[36px]"
-                {...register(`language.${index}.url`)}
+                {...register(`language.${index}.languagename`)}
                 onChange={async (e) => {
                   setValue(`language.${index}.languagename`, e.target.value);
                 }}
@@ -89,6 +90,11 @@ const LanguagePage = () => {
               Back
             </Link>
           </div>
+          {/* <div className="w-fit px-7 py-[10px] bg-[#3B83F6] rounded-[4px] ">
+            <button type="submit" className="text-white font-medium text-sm">
+              Submit
+            </button>
+          </div> */}
           <div className="w-fit px-7 py-[10px] bg-[#3B83F6] rounded-[4px] ">
             <Link href="/experience" className="text-white font-medium text-sm">
               Next

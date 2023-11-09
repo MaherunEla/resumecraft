@@ -1,8 +1,9 @@
 "use client";
 import Heading from "@/components/Heading";
 import axios from "axios";
+import Image from "next/image";
 import Link from "next/link";
-import React from "react";
+import React, { useState } from "react";
 import { Controller, useFieldArray, useFormContext } from "react-hook-form";
 import { BsPlus } from "react-icons/bs";
 const ExperiencePage = () => {
@@ -54,7 +55,7 @@ const ExperiencePage = () => {
       };
     }
   };
-
+  const [preview, setPreview] = useState<string | null>();
   return (
     <div className=" py-[129px] flex flex-col gap-[96px] items-center justify-center">
       <Heading
@@ -83,6 +84,11 @@ const ExperiencePage = () => {
               <label className="text-base font-medium text-[#2D3643] pb-2">
                 Company/ Organization Logo
               </label>
+              <div className="mb-5 ">
+                {preview && (
+                  <Image src={preview} width={250} height={250} alt="logo" />
+                )}
+              </div>
               <Controller
                 name={`experience.${index}.logo`}
                 control={control}
@@ -90,12 +96,13 @@ const ExperiencePage = () => {
                   <input
                     type="file"
                     accept="image/*"
-                    className="input w-full h-[36px]"
+                    className=""
                     onChange={async (e: any) => {
                       const file = e.target.files[0];
                       const res = await uploadImages(file);
                       console.log(res);
                       setValue(`experience.${index}.logo`, res.url);
+                      setPreview(res.url);
                       field.onChange(res.url);
                     }}
                   />
@@ -205,18 +212,18 @@ const ExperiencePage = () => {
                 >
                   <option value="">Month</option>
 
-                  <option value="01">January</option>
-                  <option value="02">February</option>
-                  <option value="03">March</option>
-                  <option value="04">April</option>
-                  <option value="05">May</option>
-                  <option value="06">June</option>
-                  <option value="07">July</option>
-                  <option value="08">August</option>
-                  <option value="09">September</option>
-                  <option value="10">October</option>
-                  <option value="11">November</option>
-                  <option value="12">December</option>
+                  <option value="January">January</option>
+                  <option value="February">February</option>
+                  <option value="March">March</option>
+                  <option value="April">April</option>
+                  <option value="May">May</option>
+                  <option value="June">June</option>
+                  <option value="July">July</option>
+                  <option value="August">August</option>
+                  <option value="September">September</option>
+                  <option value="October">October</option>
+                  <option value="November">November</option>
+                  <option value="December">December</option>
                 </select>
                 <select
                   className="w-full h-[36px] border border-[#D7DFE9] rounded-[4px] py-[8px] px-4"
@@ -279,7 +286,7 @@ const ExperiencePage = () => {
           }
         >
           <BsPlus />
-          <p className="text-sm font-medium">Add New Language</p>
+          <p className="text-sm font-medium">Add New Experience</p>
         </div>
         <div className="w-1/2 flex items-center justify-between pt-[80px]">
           <div className="w-fit px-7 py-[10px] border border-[#3B83F6]  bg-white  rounded-[4px] ">
@@ -290,6 +297,11 @@ const ExperiencePage = () => {
               Back
             </Link>
           </div>
+          {/* <div className="w-fit px-7 py-[10px] bg-[#3B83F6] rounded-[4px] ">
+            <button type="submit" className="text-white font-medium text-sm">
+              Submit
+            </button>
+          </div> */}
           <div className="w-fit px-7 py-[10px] bg-[#3B83F6] rounded-[4px] ">
             <Link href="/project" className="text-white font-medium text-sm">
               Next

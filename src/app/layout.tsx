@@ -134,15 +134,42 @@ export default function RootLayout({
       method: "POST",
       body: JSON.stringify(data.socialsite),
     });
-    const socialsitedata = socialsite.json();
-    console.log({ socialsitedata });
+    // const socialsitedata = socialsite.json();
+    // console.log({ socialsitedata });
 
-    const language = await fetch(`api/language/${profiledata.profile.id}`, {
+    const language = await fetch(`api/languagee/${profiledata.profile.id}`, {
       method: "POST",
       body: JSON.stringify(data.language),
     });
     const languagedata = language.json();
     console.log({ languagedata });
+    console.log(data.experience);
+    const experience = await fetch(`api/experience/${profiledata.profile.id}`, {
+      method: "POST",
+      body: JSON.stringify(data.experience),
+    });
+    // const experiencedata = experience.json();
+    // console.log({ experiencedata });
+
+    const project = await fetch(`api/project/${profiledata.profile.id}`, {
+      method: "POST",
+      body: JSON.stringify(data.project),
+    });
+
+    // const projectdata = project.json();
+    // console.log({ projectdata });
+
+    const education = await fetch(`api/education/${profiledata.profile.id}`, {
+      method: "POST",
+      body: JSON.stringify(data.education),
+    });
+
+    // const educationdata = education.json();
+    // console.log({ educationdata });
+    const skill = await fetch(`api/skillp/${profiledata.profile.id}`, {
+      method: "POST",
+      body: JSON.stringify(data.skills),
+    });
 
     const res = await fetch("api/form", {
       method: "POST",

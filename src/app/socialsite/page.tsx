@@ -113,11 +113,11 @@ const SocialSite = () => {
               Back
             </Link>
           </div>
-          <div className="w-fit px-7 py-[10px] bg-[#3B83F6] rounded-[4px] ">
+          {/* <div className="w-fit px-7 py-[10px] bg-[#3B83F6] rounded-[4px] ">
             <button type="submit" className="text-white font-medium text-sm">
               Submit
             </button>
-          </div>
+          </div> */}
           <div className="w-fit px-7 py-[10px] bg-[#3B83F6] rounded-[4px] ">
             <Link href="/languagef" className="text-white font-medium text-sm">
               Next
